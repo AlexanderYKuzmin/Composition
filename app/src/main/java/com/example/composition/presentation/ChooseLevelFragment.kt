@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.composition.R
 import com.example.composition.databinding.FragmentChooseLevelBinding
+import com.example.composition.domain.entity.Level
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,21 +46,50 @@ class ChooseLevelFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        /*binding.btnLevelEasy.setOnClickListener(this)
+        binding.btnLevelMedium.setOnClickListener(this)
+        binding.btnLevelHard.setOnClickListener(this)*/
+        binding.btnLevelTest.setOnClickListener{
+            launchGameFragment(Level.TEST)
+        }
+        binding.btnLevelEasy.setOnClickListener {
+            launchGameFragment(Level.EASY)
+        }
+        binding.btnLevelMedium.setOnClickListener {
+            launchGameFragment(Level.NORMAL)
+        }
+        binding.btnLevelHard.setOnClickListener {
+            launchGameFragment(Level.HARD)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding == null
     }
 
+    private fun launchGameFragment(level: Level) {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .addToBackStack(GameFragment.NAME)
+            .replace(R.id.main_container, GameFragment.newInstance(level))
+            .commit()
+    }
+
+    /*override fun onClick(v: View?) {
+        when(v) {
+            binding.btnLevelEasy -> launchGameFragment(GameFragment.newInstance(Level.EASY))
+            binding.btnLevelMedium -> launchGameFragment(GameFragment.newInstance(Level.NORMAL))
+            binding.btnLevelHard -> launchGameFragment(GameFragment.newInstance(Level.HARD))
+        }
+    }*/
+
     companion object {
+        const val NAME = "name"
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ChooseLevelFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() = ChooseLevelFragment()
     }
 }
