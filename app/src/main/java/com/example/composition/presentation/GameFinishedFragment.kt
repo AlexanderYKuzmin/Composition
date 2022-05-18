@@ -22,7 +22,6 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class GameFinishedFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var gameResult: GameResult? = null
 
     private var _binding: FragmentGameFinishedBinding? = null
@@ -80,7 +79,6 @@ class GameFinishedFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment GameFinishedFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(gameResult: GameResult) =
             GameFinishedFragment().apply {
