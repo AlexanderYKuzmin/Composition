@@ -5,14 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.example.composition.R
 import com.example.composition.databinding.FragmentChooseLevelBinding
 import com.example.composition.domain.entity.Level
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -25,16 +21,8 @@ class ChooseLevelFragment : Fragment() {
     private val binding: FragmentChooseLevelBinding
     get() = _binding ?: throw RuntimeException("FragmentChooseLevel == null")
 
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -71,10 +59,16 @@ class ChooseLevelFragment : Fragment() {
     }
 
     private fun launchGameFragment(level: Level) {
-        requireActivity().supportFragmentManager.beginTransaction()
+       /* requireActivity().supportFragmentManager.beginTransaction()
             .addToBackStack(GameFragment.NAME)
             .replace(R.id.main_container, GameFragment.newInstance(level))
-            .commit()
+            .commit()*/
+        val args = Bundle().apply {
+            arguments.apply {
+                putParcelable(GameFragment.KEY_LEVEL, level)
+            }
+        }
+        findNavController().navigate(R.id.action_chooseLevelFragment_to_gameFragment, args)
     }
 
     /*override fun onClick(v: View?) {

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.findNavController
 import com.example.composition.R
 import com.example.composition.databinding.FragmentGameFinishedBinding
 import com.example.composition.domain.entity.GameResult
@@ -48,11 +49,14 @@ class GameFinishedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true){
+        /*requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 retryGame()
             }
-        })
+        })*/
+        binding.buttonRetry.setOnClickListener {
+            retryGame()
+        }
     }
 
     override fun onDestroyView() {
@@ -61,16 +65,17 @@ class GameFinishedFragment : Fragment() {
     }
 
     private fun parseArgs() {
-        gameResult = requireArguments().getSerializable(GAME_RESULT) as GameResult
+        gameResult = requireArguments().getParcelable(GAME_RESULT)
     }
 
     private fun retryGame() {
-        requireActivity().supportFragmentManager.popBackStack(GameFragment.NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        /*requireActivity().supportFragmentManager.popBackStack(GameFragment.NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE)*/
+        findNavController().popBackStack()
     }
 
     companion object {
 
-        private const val GAME_RESULT = "game_result"
+        const val GAME_RESULT = "game_result"
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -83,7 +88,7 @@ class GameFinishedFragment : Fragment() {
         fun newInstance(gameResult: GameResult) =
             GameFinishedFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(GAME_RESULT, gameResult)
+                    putParcelable(GAME_RESULT, gameResult)
                 }
             }
     }
