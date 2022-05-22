@@ -1,10 +1,16 @@
 package com.example.composition.presentation
 
+import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.composition.R
@@ -12,6 +18,7 @@ import com.example.composition.databinding.FragmentGameBinding
 import com.example.composition.domain.entity.GameResult
 import com.example.composition.domain.entity.GameSettings
 import com.example.composition.domain.entity.Level
+import com.example.composition.domain.entity.Question
 import java.lang.RuntimeException
 
 // TODO: Rename parameter arguments, choose names that match
@@ -26,9 +33,25 @@ private const val ARG_PARAM2 = "param2"
  */
 class GameFragment : Fragment() {
 
-    private val viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
-    private var level: Level? = null
+    private lateinit var level: Level
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
+        )[GameViewModel::class.java]
+    }
+
+    private val tvOptions by lazy {
+        mutableListOf<TextView>().apply {
+            add(binding.tvOption1)
+            add(binding.tvOption2)
+            add(binding.tvOption3)
+            add(binding.tvOption4)
+            add(binding.tvOption5)
+            add(binding.tvOption6)
+        }
+    }
 
     private var _binding: FragmentGameBinding? = null
     private val binding: FragmentGameBinding
@@ -48,9 +71,43 @@ class GameFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.question.observe(viewLifecycleOwner, Observer {
+            setQuestionAnswerValues(it)
+        })
 
+        viewModel.formattedTime.observe(viewLifecycleOwner, Observer {
+            setTimeValue(it)
+        })
+
+        viewModel.percentOfRightAnswers.observe(viewLifecycleOwner, Observer {
+            setProgressBarValue(it)
+        })
+
+        viewModel.enoughCountOfRightAnswers.observe(viewLifecycleOwner, Observer {
+            setProgressTextColor(it)
+        })
+
+        viewModel.enoughPercentOfRightAnswers.observe(viewLifecycleOwner, Observer {
+            setProgressBarColor(it)
+        })
+
+        viewModel.minPercent.observe(viewLifecycleOwner, Observer {
+            setSecondaryProgressBarValue(it)
+        })
+
+        viewModel.gameResult.observe(viewLifecycleOwner, Observer {
+            launchGameFinishedFragment(it)
+        })
+
+        viewModel.progressAnswers.observe(viewLifecycleOwner, Observer {
+            setProgressAnswers(it)
+        })
+
+        setUpListeners()
+        viewModel.startGame(level)
     }
 
     override fun onDestroyView() {
@@ -77,19 +134,64 @@ class GameFragment : Fragment() {
         findNavController().navigate(R.id.action_gameFragment_to_gameFinishedFragment, args)
     }
 
-    private fun setUpTextOptions() {
-        binding.tvOption1.text = null
+    private fun setQuestionAnswerValues(question: Question) {
+        binding.tvSum.text = question.sum.toString()
+        binding.tvLeftNumber.text = question.visibleNumber.toString()
+        for (i in question.options.indices) {
+            tvOptions[i].text = question.options[i].toString()
+        }
+    }
+
+    private fun setTimeValue(formattedTime: String) {
+        binding.tvTimer.text = formattedTime
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun setProgressBarValue(progress: Int) {
+        binding.progressBar.setProgress(progress, true)
+    }
+
+    private fun setProgressTextColor(isRightAnswersEnough: Boolean) {
+        val colorResId = if (isRightAnswersEnough) {
+            android.R.color.holo_green_light
+        } else {
+            android.R.color.holo_red_light
+        }
+        val color = ContextCompat.getColor(requireContext(), colorResId)
+        binding.tvAnswersProgress.setTextColor(color)
+    }
+
+    private fun setProgressBarColor(isPercentOfRightAnswersEnough: Boolean) {
+        val colorResId = if (isPercentOfRightAnswersEnough) {
+            android.R.color.holo_green_light
+        } else {
+            android.R.color.holo_red_light
+        }
+        val color = ContextCompat.getColor(requireContext(), colorResId)
+        binding.progressBar.progressTintList = ColorStateList.valueOf(color)
+    }
+
+    private fun setSecondaryProgressBarValue(minPercent: Int) {
+        binding.progressBar.secondaryProgress = minPercent
+    }
+
+    private fun setProgressAnswers(progressAnswer: String) {
+        binding.tvAnswersProgress.text = progressAnswer
     }
 
     private fun setUpListeners() {
-        binding.tvOption1.setOnClickListener {
-            launchGameFinishedFragment(GameResult(
-                true,
-                0,
-                0,
-                GameSettings(0, 0, 0, 0)
-            ))
+
+        for (tvOption in tvOptions) {
+            tvOption.setOnClickListener {
+                viewModel.chooseAnswer(tvOption.text.toString().toInt())
+            }
         }
+    }
+
+    private fun setUpObservers() {
+
+
+
     }
 
     companion object {

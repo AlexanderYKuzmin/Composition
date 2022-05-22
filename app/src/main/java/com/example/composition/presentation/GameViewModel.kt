@@ -28,7 +28,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val getGameSettingsUseCase = GetGameSettingsUseCase(repository)
 
     private val _question = MutableLiveData<Question>()
-    private val question: LiveData<Question>
+    val question: LiveData<Question>
         get() = _question
 
     private var timer: CountDownTimer? = null
@@ -38,27 +38,27 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         get() = _formattedTime
 
     private val _percentOfRightAnswers = MutableLiveData<Int>()
-    private val percentOfRightAnswers: LiveData<Int>
+    val percentOfRightAnswers: LiveData<Int>
         get() = _percentOfRightAnswers
 
     private val _progressAnswers = MutableLiveData<String>()
-    private val progressAnswers: LiveData<String>
+    val progressAnswers: LiveData<String>
         get() = _progressAnswers
 
     private val _enoughCountOfRightAnswers = MutableLiveData<Boolean>()
-    private val enoughCountOfRightAnswers: LiveData<Boolean>
+    val enoughCountOfRightAnswers: LiveData<Boolean>
         get() = _enoughCountOfRightAnswers
 
     private val _enoughPercentOfRightAnswers = MutableLiveData<Boolean>()
-    private val enoughPercentOfRightAnswers: LiveData<Boolean>
+    val enoughPercentOfRightAnswers: LiveData<Boolean>
         get() = _enoughCountOfRightAnswers
 
     private val _minPercent = MutableLiveData<Int>()
-    private val minPercent: LiveData<Int>
+    val minPercent: LiveData<Int>
         get() = _minPercent
 
     private val _gameResult = MutableLiveData<GameResult>()
-    private val gameResult: LiveData<GameResult>
+    val gameResult: LiveData<GameResult>
         get() = _gameResult
 
     private var countOfRightAnswers = 0
@@ -70,7 +70,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         generateQuestion()
     }
 
-    fun updateProgress() {
+    private fun updateProgress() {
         val percent = calculatePercentOfRightAnswers()
         _percentOfRightAnswers.value = percent
         _progressAnswers.value = String.format(
@@ -102,6 +102,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     fun startGame(level: Level) {
         getGameSettings(level)
+        generateQuestion()
         startTimer()
     }
 
