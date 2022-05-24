@@ -14,9 +14,6 @@ import com.example.composition.R
 import com.example.composition.databinding.FragmentGameFinishedBinding
 import com.example.composition.domain.entity.GameResult
 
-
-
-
 class GameFinishedFragment : Fragment() {
     private var gameResult: GameResult? = null
 
@@ -33,7 +30,6 @@ class GameFinishedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         parseArgs()
     }
 
@@ -53,14 +49,11 @@ class GameFinishedFragment : Fragment() {
                 retryGame()
             }
         })*/
-
         binding.buttonRetry.setOnClickListener {
             retryGame()
         }
         setTextData()
         setPictureWinner()
-
-
     }
 
     override fun onDestroyView() {
