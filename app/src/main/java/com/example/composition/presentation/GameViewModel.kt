@@ -2,6 +2,7 @@ package com.example.composition.presentation
 
 import android.app.Application
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -51,7 +52,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _enoughPercentOfRightAnswers = MutableLiveData<Boolean>()
     val enoughPercentOfRightAnswers: LiveData<Boolean>
-        get() = _enoughCountOfRightAnswers
+        get() = _enoughPercentOfRightAnswers
 
     private val _minPercent = MutableLiveData<Int>()
     val minPercent: LiveData<Int>
@@ -72,6 +73,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun updateProgress() {
         val percent = calculatePercentOfRightAnswers()
+        Log.d("GameViewModel", "CalculatePercentOfRightAnswers = $percent")
         _percentOfRightAnswers.value = percent
         _progressAnswers.value = String.format(
             context.resources.getString(R.string.progress_answers),
@@ -81,9 +83,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
         _enoughCountOfRightAnswers.value = countOfRightAnswers >= gameSettings.minCountOfRightAnswers
         _enoughPercentOfRightAnswers.value = percent >= gameSettings.minPercentOfRightAnswers
+        Log.d("GameViewModel", "enoughOPercent = ${enoughPercentOfRightAnswers.value}")
     }
 
     private fun calculatePercentOfRightAnswers(): Int {
+        if (countOfQuestions == 0) return 0
         return ((countOfRightAnswers / countOfQuestions.toDouble()) * 100).toInt()
     }
 
@@ -104,6 +108,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         getGameSettings(level)
         generateQuestion()
         startTimer()
+        updateProgress()
     }
 
     private fun getGameSettings(level: Level) {
@@ -137,6 +142,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun finishGame() {
+        Log.d("GameViewModel", "enoughCountOfRightAnswers.value = $enoughCountOfRightAnswers.value :: enoughPercentOfRightAnsewrs = ${enoughPercentOfRightAnswers.value}")
         _gameResult.value = GameResult(
             enoughCountOfRightAnswers.value == true && enoughPercentOfRightAnswers.value == true,
             countOfRightAnswers,

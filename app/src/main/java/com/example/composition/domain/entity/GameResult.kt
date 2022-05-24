@@ -11,7 +11,15 @@ data class GameResult(
     val countOfRightAnswers: Int,
     val countOfQuestions: Int,
     val gameSettings: GameSettings?
-        ) : Parcelable /*{
+        ) : Parcelable {
+
+            val percentOfRightAnswers: Int
+            get() = (countOfRightAnswers / countOfQuestions.toDouble() * 100).toInt()
+        }
+
+
+
+/*{
     constructor(parcel: Parcel) : this(
         parcel.readByte() != 0.toByte(),
         parcel.readInt(),
