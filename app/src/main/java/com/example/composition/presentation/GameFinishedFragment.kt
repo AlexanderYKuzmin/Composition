@@ -78,16 +78,16 @@ class GameFinishedFragment : Fragment() {
     }
 
     private fun setTextData() {
-        val reqAnswers = binding.tvRequiredAnswers.text.toString()
+        val reqAnswers = getString(R.string.required_scores)
         binding.tvRequiredAnswers.text = String.format(reqAnswers, gameResult?.gameSettings?.minCountOfRightAnswers)
 
-        val rightAnswers = binding.tvScoreAnswers.text.toString()
+        val rightAnswers = getString(R.string.score_answers)
         binding.tvScoreAnswers.text = String.format(rightAnswers, gameResult?.countOfRightAnswers)
 
-        val reqPercentage = binding.tvRequiredPercentage.text.toString()
+        val reqPercentage = getString(R.string.required_percentage)
         binding.tvRequiredPercentage.text = String.format(reqPercentage, gameResult?.gameSettings?.minPercentOfRightAnswers)
 
-        val rightPercentage = binding.tvScorePercentage.text.toString()
+        val rightPercentage = getString(R.string.score_percentage)
         binding.tvScorePercentage.text = String.format(rightPercentage, gameResult?.percentOfRightAnswers)
     }
 
