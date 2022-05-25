@@ -81,9 +81,5 @@ class ChooseLevelFragment : Fragment() {
 
     companion object {
         const val NAME = "name"
-
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance() = ChooseLevelFragment()
     }
 }

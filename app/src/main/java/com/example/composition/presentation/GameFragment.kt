@@ -25,10 +25,14 @@ class GameFragment : Fragment() {
 
 
     private lateinit var level: Level
+    private val viewModelFactory by lazy {
+        GameViewModelFactory(requireActivity().application, level)
+    }
+
     private val viewModel by lazy {
         ViewModelProvider(
             this,
-            ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
+            viewModelFactory
         )[GameViewModel::class.java]
     }
 
@@ -97,7 +101,7 @@ class GameFragment : Fragment() {
         })
 
         setUpListeners()
-        viewModel.startGame(level)
+        //viewModel.startGame(level)
     }
 
     override fun onDestroyView() {
