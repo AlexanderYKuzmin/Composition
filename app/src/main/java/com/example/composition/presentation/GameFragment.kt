@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.composition.R
 import com.example.composition.databinding.FragmentGameBinding
 import com.example.composition.domain.entity.GameResult
@@ -24,9 +25,11 @@ import java.lang.RuntimeException
 class GameFragment : Fragment() {
 
 
-    private lateinit var level: Level
+    //private lateinit var level: Level
+
+    private val args by navArgs<GameFragmentArgs>()
     private val viewModelFactory by lazy {
-        GameViewModelFactory(requireActivity().application, level)
+        GameViewModelFactory(requireActivity().application, args.level)
     }
 
     private val viewModel by lazy {
@@ -53,7 +56,7 @@ class GameFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parseArgs()
+        //parseArgs()
     }
 
     override fun onCreateView(
@@ -109,23 +112,23 @@ class GameFragment : Fragment() {
         _binding == null
     }
 
-    private fun parseArgs() {
+    /*private fun parseArgs() {
         requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
             level = it
         }
-    }
+    }*/
 
     private fun launchGameFinishedFragment(gameResult: GameResult) {
         /*requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.main_container, GameFinishedFragment.newInstance(gameResult))
             .addToBackStack(null)
             .commit()*/
-        val args = Bundle().apply {
+        /*val args = Bundle().apply { // it is in jetpack
             arguments.apply {
                 putParcelable(GameFinishedFragment.GAME_RESULT, gameResult)
             }
-        }
-        findNavController().navigate(R.id.action_gameFragment_to_gameFinishedFragment, args)
+        }*/
+        findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFinishedFragment(gameResult))
     }
 
     private fun setQuestionAnswerValues(question: Question) {
