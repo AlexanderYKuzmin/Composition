@@ -53,8 +53,7 @@ class GameFinishedFragment : Fragment() {
         binding.buttonRetry.setOnClickListener {
             retryGame()
         }
-        setTextData()
-        setPictureWinner()
+        binding.gameResult = args.gameResult
     }
 
     override fun onDestroyView() {
@@ -71,7 +70,7 @@ class GameFinishedFragment : Fragment() {
         findNavController().popBackStack()
     }
 
-    private fun setTextData() {
+   /* private fun setTextData() {
         val reqAnswers = getString(R.string.required_scores)
         binding.tvRequiredAnswers.text = String.format(reqAnswers, args.gameResult.gameSettings?.minCountOfRightAnswers)
 
@@ -93,7 +92,7 @@ class GameFinishedFragment : Fragment() {
             R.drawable.too_sad_26009
         }
         binding.emojiResult.setImageDrawable(ContextCompat.getDrawable(requireContext(), smile))
-    }
+    }*/
 
     companion object {
         const val GAME_RESULT = "game_result"
