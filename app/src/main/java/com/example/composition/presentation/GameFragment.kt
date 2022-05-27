@@ -39,7 +39,7 @@ class GameFragment : Fragment() {
         )[GameViewModel::class.java]
     }
 
-    private val tvOptions by lazy {
+    /*private val tvOptions by lazy {
         mutableListOf<TextView>().apply {
             add(binding.tvOption1)
             add(binding.tvOption2)
@@ -48,7 +48,7 @@ class GameFragment : Fragment() {
             add(binding.tvOption5)
             add(binding.tvOption6)
         }
-    }
+    }*/
 
     private var _binding: FragmentGameBinding? = null
     private val binding: FragmentGameBinding
@@ -71,39 +71,43 @@ class GameFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.question.observe(viewLifecycleOwner, Observer {
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        /*viewModel.question.observe(viewLifecycleOwner, Observer {
             setQuestionAnswerValues(it)
-        })
+        })*/
 
-        viewModel.formattedTime.observe(viewLifecycleOwner, Observer {
+       /* viewModel.formattedTime.observe(viewLifecycleOwner, Observer {
             setTimeValue(it)
-        })
+        })*/
 
-        viewModel.percentOfRightAnswers.observe(viewLifecycleOwner, Observer {
+        /*viewModel.percentOfRightAnswers.observe(viewLifecycleOwner, Observer {
             setProgressBarValue(it)
         })
 
         viewModel.enoughCountOfRightAnswers.observe(viewLifecycleOwner, Observer {
             setProgressTextColor(it)
-        })
+        })*/
 
-        viewModel.enoughPercentOfRightAnswers.observe(viewLifecycleOwner, Observer {
+        /*viewModel.enoughPercentOfRightAnswers.observe(viewLifecycleOwner, Observer {
             setProgressBarColor(it)
         })
 
         viewModel.minPercent.observe(viewLifecycleOwner, Observer {
             setSecondaryProgressBarValue(it)
-        })
+        })*/
 
         viewModel.gameResult.observe(viewLifecycleOwner, Observer {
             launchGameFinishedFragment(it)
         })
 
-        viewModel.progressAnswers.observe(viewLifecycleOwner, Observer {
+        /*viewModel.progressAnswers.observe(viewLifecycleOwner, Observer {
             setProgressAnswers(it)
-        })
+        })*/
 
-        setUpListeners()
+        //setUpListeners()
         //viewModel.startGame(level)
     }
 
@@ -131,15 +135,15 @@ class GameFragment : Fragment() {
         findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFinishedFragment(gameResult))
     }
 
-    private fun setQuestionAnswerValues(question: Question) {
+    /*private fun setQuestionAnswerValues(question: Question) {
         binding.tvSum.text = question.sum.toString()
         binding.tvLeftNumber.text = question.visibleNumber.toString()
         for (i in question.options.indices) {
             tvOptions[i].text = question.options[i].toString()
         }
-    }
+    }*/
 
-    private fun setTimeValue(formattedTime: String) {
+    /*private fun setTimeValue(formattedTime: String) {
         binding.tvTimer.text = formattedTime
     }
 
@@ -166,30 +170,24 @@ class GameFragment : Fragment() {
         }
         val color = ContextCompat.getColor(requireContext(), colorResId)
         binding.progressBar.progressTintList = ColorStateList.valueOf(color)
-    }
+    }*/
 
-    private fun setSecondaryProgressBarValue(minPercent: Int) {
+    /*private fun setSecondaryProgressBarValue(minPercent: Int) {
         binding.progressBar.secondaryProgress = minPercent
     }
 
     private fun setProgressAnswers(progressAnswer: String) {
         binding.tvAnswersProgress.text = progressAnswer
-    }
+    }*/
 
-    private fun setUpListeners() {
+    /*private fun setUpListeners() {
 
         for (tvOption in tvOptions) {
             tvOption.setOnClickListener {
                 viewModel.chooseAnswer(tvOption.text.toString().toInt())
             }
         }
-    }
-
-    private fun setUpObservers() {
-
-
-
-    }
+    }*/
 
     companion object {
 
